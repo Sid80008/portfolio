@@ -1,37 +1,29 @@
 export const skillsData = [
   {
-    category: "Frontend Core",
+    category: "Technical Stack",
     items: [
-      { name: "React 18", icon: "react" },
-      { name: "Next.js 14", icon: "nextjs" },
-      { name: "TypeScript", icon: "typescript" },
-      { name: "HTML5/CSS3", icon: "html" },
+      { name: "Python", icon: "python" },
+      { name: "HTML", icon: "html" },
+      { name: "CSS", icon: "css" },
+      { name: "Java", icon: "java" },
+      { name: "C", icon: "c" },
+      { name: "C++", icon: "cpp" },
+      { name: "JSON", icon: "json" },
+      { name: "DBMS", icon: "database" },
+      { name: "SQL", icon: "sql" },
+      { name: "AI Tools", icon: "ai" },
+      { name: "Web Technologies", icon: "globe" },
     ]
   },
   {
-    category: "Styling & Animation",
+    category: "Creative Tools",
     items: [
-      { name: "Tailwind CSS", icon: "tailwind" },
-      { name: "Framer Motion", icon: "framer" },
-      { name: "GSAP", icon: "gsap" },
-      { name: "CSS Modules", icon: "css" },
-    ]
-  },
-  {
-    category: "3D & Graphics",
-    items: [
-      { name: "Three.js", icon: "threejs" },
-      { name: "React Three Fiber", icon: "r3f" },
-      { name: "WebGL", icon: "webgl" },
-    ]
-  },
-  {
-    category: "Architecture & Data",
-    items: [
-      { name: "Zustand", icon: "zustand" },
-      { name: "React Query", icon: "reactquery" },
-      { name: "Zod", icon: "zod" },
-      { name: "GraphQL", icon: "graphql" },
+      { name: "Photoshop", icon: "photoshop" },
+      { name: "Illustrator", icon: "illustrator" },
+      { name: "Premiere Pro", icon: "premiere" },
+      { name: "DaVinci Resolve", icon: "davinci" },
+      { name: "After Effects", icon: "aftereffects" },
     ]
   }
 ];
+

@@ -40,7 +40,7 @@ export default function HeroSection() {
           transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
           className="max-w-2xl text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed"
         >
-          Senior Frontend Engineer specializing in Next.js, React, and performance-first architecture. I turn complex problems into elegant, scaleable solutions.
+          Full Stack Developer & Creative Designer specializing in Python, Next.js, and high-impact visual design work. Crafting digital products with a focus on experience and aesthetics.
         </motion.p>
 
         <motion.div

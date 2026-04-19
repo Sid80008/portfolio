@@ -56,7 +56,7 @@ export default function CustomCursor() {
         // Expand ring, hide dot
         ring.style.width = "48px";
         ring.style.height = "48px";
-        ring.style.borderColor = "rgba(theme('colors.primary'), 0.8)";
+        ring.style.borderColor = "rgba(196, 192, 255, 0.8)";
         dot.style.opacity = "0";
         dot.style.width = "0";
         dot.style.height = "0";
@@ -69,7 +69,7 @@ export default function CustomCursor() {
         // Reset
         ring.style.width = "32px";
         ring.style.height = "32px";
-        ring.style.borderColor = "rgba(theme('colors.primary'), 0.5)";
+        ring.style.borderColor = "rgba(196, 192, 255, 0.5)";
         ring.style.opacity = "1";
         dot.style.opacity = "1";
         dot.style.width = "8px";
@@ -98,17 +98,17 @@ export default function CustomCursor() {
       <div 
         ref={dotRef} 
         className="fixed top-0 left-0 w-2 h-2 rounded-full pointer-events-none z-[100] transition-all duration-[300ms] ease-out mix-blend-difference"
-        style={{ backgroundColor: "theme('colors.primary')" }}
+        style={{ backgroundColor: "#c4c0ff" }}
       />
       <div 
         ref={ringRef} 
         className="fixed top-0 left-0 w-8 h-8 rounded-full border pointer-events-none z-[90] transition-all duration-[500ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] mix-blend-difference"
-        style={{ borderColor: "rgba(theme('colors.primary'), 0.5)" }}
+        style={{ borderColor: "rgba(196, 192, 255, 0.5)" }}
       />
       <div 
         ref={pillRef} 
         className="fixed top-0 left-0 px-3 py-1.5 rounded-full pointer-events-none z-[100] font-mono text-[9px] uppercase tracking-widest text-background transition-transform duration-[300ms] ease-[cubic-bezier(0.34,1.56,0.64,1)]"
-        style={{ backgroundColor: "theme('colors.primary')", "--pill-scale": 0 } as React.CSSProperties}
+        style={{ backgroundColor: "#c4c0ff", "--pill-scale": 0 } as React.CSSProperties}
       >
         View →
       </div>

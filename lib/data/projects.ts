@@ -13,38 +13,21 @@ export interface Project {
 export const projectsData: Project[] = [
   {
     id: "p1",
-    title: "E-Commerce Platform Edge UI",
-    description: "A highly performant e-commerce storefront supporting 10k+ concurrent users with edge rendering.",
+    title: "Web & Mobile Development",
+    description: "7 completed projects across various domains, focusing on clean architecture and high performance.",
     category: "web",
-    image: "/images/placeholder-1.jpg",
+    image: "/logo.png",
     link: "#",
-    tech: ["Next.js", "TypeScript", "Tailwind", "GSAP"]
+    tech: ["Python", "Java", "Next.js", "SQL"]
   },
   {
     id: "p2",
-    title: "Financial Dashboard",
-    description: "Real-time market analytics dashboard with WebGL data visualization capabilities.",
+    title: "Creative Design Portfolio",
+    description: "Expert work in YouTube Thumbnails, Reel Covers, and Brand Identity. Currently focused on skill-building and high-quality creative assets.",
     category: "app",
-    image: "/images/placeholder-2.jpg",
+    image: "/logo.png",
     link: "#",
-    tech: ["React", "Three.js", "Zustand", "WebSockets"]
-  },
-  {
-    id: "p3",
-    title: "React UI Component Library",
-    description: "An accessible, tree-shakable component library used by 50+ internal teams.",
-    category: "open-source",
-    image: "/images/placeholder-3.jpg",
-    link: "#",
-    tech: ["React", "Radix UI", "Framer Motion", "Rollup"]
-  },
-  {
-    id: "p4",
-    title: "AI Study Assistant",
-    description: "AI-powered scheduling and tuner integration with LLM backends.",
-    category: "app",
-    image: "/images/placeholder-4.jpg",
-    link: "#",
-    tech: ["React Native", "FastAPI", "Python", "Supabase"]
+    tech: ["Photoshop", "Premiere Pro", "DaVinci Resolve"]
   }
 ];
+
