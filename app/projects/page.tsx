@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
 import ProjectGrid from "@/components/projects/ProjectGrid";
 
 export const metadata: Metadata = {
@@ -15,9 +16,12 @@ export default function ProjectsPage() {
           <p className="text-on-surface-variant text-lg max-w-2xl font-light">A curated intersection of deep engineering and premium visual design. Each project represents a specific architectural challenge solved.</p>
         </header>
 
-        <ProjectGrid />
+        <Suspense fallback={<div className="animate-pulse py-20 text-center text-white/20 font-mono tracking-widest uppercase">Initializing Canvas...</div>}>
+          <ProjectGrid />
+        </Suspense>
       </div>
     </main>
   );
 }
+
 
