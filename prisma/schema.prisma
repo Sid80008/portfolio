@@ -1,0 +1,88 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ContactMessage {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  ip        String?
+  userAgent String?
+  status    MessageStatus @default(UNREAD)
+  createdAt DateTime      @default(now())
+
+  @@index([email])
+  @@index([createdAt])
+}
+
+enum MessageStatus {
+  UNREAD
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+model Project {
+  id          String          @id @default(cuid())
+  title       String
+  slug        String          @unique
+  description String
+  longDesc    String?
+  category    ProjectCategory
+  tags        String[]
+  imageUrl    String?
+  liveUrl     String?
+  githubUrl   String?
+  featured    Boolean         @default(false)
+  order       Int             @default(0)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([category])
+  @@index([featured])
+}
+
+enum ProjectCategory {
+  WEB
+  APP
+  DESIGN
+  CODE
+}
+
+model Skill {
+  id       String        @id @default(cuid())
+  name     String        @unique
+  category SkillCategory
+  level    Int           // 1-5 proficiency
+  icon     String?       // icon name or URL
+  order    Int           @default(0)
+}
+
+enum SkillCategory {
+  PROGRAMMING
+  CREATIVE
+  WEB
+  DATABASE
+  AI_TOOLS
+}
+
+model Experience {
+  id          String    @id @default(cuid())
+  title       String
+  org         String
+  type        String    // "freelance", "college", "personal"
+  description String
+  startDate   DateTime
+  endDate     DateTime?
+  current     Boolean   @default(false)
+  order       Int       @default(0)
+}
