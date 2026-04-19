@@ -11,12 +11,12 @@ export const experienceData: ExperienceNode[] = [
   {
     id: "e1",
     role: "Full Stack Developer",
-    company: "Personal & Academic Projects",
-    date: "Ongoing",
+    company: "Development & Personal Projects",
+    date: "",
     description: [
-      "Completed 7 professional-grade websites and applications.",
-      "Developing a deep portfolio of personal projects focused on scalability and depth.",
-      "Integrating AI tools to optimize development workflows."
+      "Projects (Websites & Apps): 7 completed",
+      "Personal Projects: ongoing (focused on depth and expansion)",
+      "Integrating AI tools to optimize development and automation workflows."
     ],
     tech: ["Python", "Java", "Next.js", "SQL", "DBMS"]
   },
@@ -24,14 +24,15 @@ export const experienceData: ExperienceNode[] = [
     id: "e2",
     role: "Creative Designer",
     company: "Freelance & Skill Building",
-    date: "Current",
+    date: "",
     description: [
-      "Specializing in Graphic Designing with a focus on experience building.",
-      "Expertise in creating YouTube Thumbnails, Reel Covers, and Branding assets.",
-      "Working on small-scale creative tasks to refine visual storytelling techniques.",
-      "Currently in non-monetized status, prioritizing skill acquisition and portfolio quality."
+      "Graphic Designing: in progress (experience-focused)",
+      "YouTube Thumbnails & Reel Covers: in progress",
+      "Posters & Branding: in progress",
+      "Freelancing Status: Small-scale creative tasks for portfolio development (not monetized yet)"
     ],
     tech: ["Photoshop", "Illustrator", "Premiere Pro", "DaVinci Resolve", "After Effects"]
   }
 ];
+
 

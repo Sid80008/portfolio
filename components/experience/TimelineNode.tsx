@@ -20,7 +20,6 @@ export default function TimelineNode({ data, index }: { data: ExperienceNode, in
         className={`w-full pl-12 md:pl-0 md:w-[45%] ${isEven ? 'md:pr-12 md:text-right' : 'md:pl-12 text-left'}`}
       >
         <div className="glass-card p-6 md:p-10 rounded-3xl group-hover:border-accent/40 transition-colors duration-500">
-          <span className="text-accent font-mono text-xs uppercase tracking-[0.2em] mb-3 block">{data.date}</span>
           <h3 className="text-2xl font-bold font-heading text-white mb-1">{data.role}</h3>
           <h4 className="text-lg text-white/40 mb-6">{data.company}</h4>
           
