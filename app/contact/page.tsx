@@ -38,7 +38,7 @@ export default function ContactPage() {
       });
 
       if (!res.ok) throw new Error("Failed to send message");
-      
+
       setSubmitStatus("success");
       reset();
     } catch (error) {
@@ -56,12 +56,12 @@ export default function ContactPage() {
         <div className="flex flex-col gap-8 lg:w-1/2 md:sticky md:top-32">
           <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">Transmission</span>
           <h1 className="font-headline text-5xl md:text-7xl font-bold tracking-tight text-on-surface leading-[0.9]">
-            Let&apos;s build<br/>something<br/>exceptional.
+            Let&apos;s build<br />something<br />exceptional.
           </h1>
           <p className="text-on-surface-variant text-lg font-light leading-relaxed max-w-md mt-4">
             Whether it&apos;s a complex web application, a cinematic promotional site, or a scalable backend architecture—reach out.
           </p>
-          
+
           <div className="flex flex-col gap-6 mt-8 border-t border-outline-variant/30 pt-8">
             <div className="flex items-center gap-4">
               <span className="material-symbols-outlined text-outline">mail</span>
@@ -85,7 +85,7 @@ export default function ContactPage() {
         {/* Right Column: Form */}
         <div className="w-full lg:w-1/2 bg-surface-container-low border border-outline-variant/20 p-8 md:p-12 rounded-3xl shadow-2xl relative overflow-hidden">
           <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" style={{ background: "radial-gradient(circle at top right, #c4c0ff 0%, transparent 60%)" }}></div>
-          
+
           <form onSubmit={handleSubmit(onSubmit)} className="relative z-10 flex flex-col gap-8 w-full">
             {/* Honeypot — invisible to users, catches bots */}
             <input
@@ -97,48 +97,48 @@ export default function ContactPage() {
               aria-hidden="true"
             />
             <div className="relative group">
-              <input 
-                type="text" 
-                id="name" 
+              <input
+                type="text"
+                id="name"
                 {...register("name")}
-                className="w-full bg-transparent border-b-2 border-outline-variant/30 py-4 text-on-surface focus:outline-none focus:border-primary transition-colors peer" 
-                placeholder=" " 
+                className="w-full bg-transparent border-b-2 border-outline-variant/30 py-4 text-on-surface focus:outline-none focus:border-primary transition-colors peer"
+                placeholder=" "
               />
               <label htmlFor="name" className="absolute left-0 top-4 text-on-surface-variant text-lg transition-all peer-focus:-top-4 peer-focus:text-xs peer-focus:text-primary peer-[&:not(:placeholder-shown)]:-top-4 peer-[&:not(:placeholder-shown)]:text-xs peer-[&:not(:placeholder-shown)]:text-primary pointer-events-none">Name</label>
               {errors.name && <p className="text-error text-xs mt-2">{errors.name.message}</p>}
             </div>
 
             <div className="relative group">
-              <input 
-                type="email" 
-                id="email" 
+              <input
+                type="email"
+                id="email"
                 {...register("email")}
-                className="w-full bg-transparent border-b-2 border-outline-variant/30 py-4 text-on-surface focus:outline-none focus:border-primary transition-colors peer" 
-                placeholder=" " 
+                className="w-full bg-transparent border-b-2 border-outline-variant/30 py-4 text-on-surface focus:outline-none focus:border-primary transition-colors peer"
+                placeholder=" "
               />
               <label htmlFor="email" className="absolute left-0 top-4 text-on-surface-variant text-lg transition-all peer-focus:-top-4 peer-focus:text-xs peer-focus:text-primary peer-[&:not(:placeholder-shown)]:-top-4 peer-[&:not(:placeholder-shown)]:text-xs peer-[&:not(:placeholder-shown)]:text-primary pointer-events-none">Email</label>
               {errors.email && <p className="text-error text-xs mt-2">{errors.email.message}</p>}
             </div>
 
             <div className="relative group">
-              <input 
-                type="text" 
-                id="subject" 
+              <input
+                type="text"
+                id="subject"
                 {...register("subject")}
-                className="w-full bg-transparent border-b-2 border-outline-variant/30 py-4 text-on-surface focus:outline-none focus:border-primary transition-colors peer" 
-                placeholder=" " 
+                className="w-full bg-transparent border-b-2 border-outline-variant/30 py-4 text-on-surface focus:outline-none focus:border-primary transition-colors peer"
+                placeholder=" "
               />
               <label htmlFor="subject" className="absolute left-0 top-4 text-on-surface-variant text-lg transition-all peer-focus:-top-4 peer-focus:text-xs peer-focus:text-primary peer-[&:not(:placeholder-shown)]:-top-4 peer-[&:not(:placeholder-shown)]:text-xs peer-[&:not(:placeholder-shown)]:text-primary pointer-events-none">Subject</label>
               {errors.subject && <p className="text-error text-xs mt-2">{errors.subject.message}</p>}
             </div>
 
             <div className="relative group mt-4">
-              <textarea 
-                id="message" 
+              <textarea
+                id="message"
                 rows={4}
                 {...register("message")}
-                className="w-full bg-transparent border-b-2 border-outline-variant/30 py-4 text-on-surface focus:outline-none focus:border-primary transition-colors peer resize-none" 
-                placeholder=" " 
+                className="w-full bg-transparent border-b-2 border-outline-variant/30 py-4 text-on-surface focus:outline-none focus:border-primary transition-colors peer resize-none"
+                placeholder=" "
               ></textarea>
               <label htmlFor="message" className="absolute left-0 top-4 text-on-surface-variant text-lg transition-all peer-focus:-top-4 peer-focus:text-xs peer-focus:text-primary peer-[&:not(:placeholder-shown)]:-top-4 peer-[&:not(:placeholder-shown)]:text-xs peer-[&:not(:placeholder-shown)]:text-primary pointer-events-none">Message Requirements</label>
               {errors.message && <p className="text-error text-xs mt-2">{errors.message.message}</p>}
@@ -151,8 +151,8 @@ export default function ContactPage() {
               <p className="text-error text-sm">Transmission failed. Please try again or use direct email.</p>
             )}
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={isSubmitting}
               className="self-start mt-4 px-10 py-4 bg-primary text-on-primary font-headline font-semibold rounded-full hover:bg-secondary hover:text-on-secondary transition-colors duration-300 shadow-[0_0_30px_rgba(196,192,255,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
             >

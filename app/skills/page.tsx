@@ -20,8 +20,8 @@ export default function SkillsPage() {
     {
       title: "Graphic Design",
       icon: "palette",
-      description: "Adobe Illustrator, Photoshop, Figma, Premiere Pro, After Effects",
-      skills: []
+      description: "Gaining hands-on experience through internships and personal projects",
+      skills: ["Adobe Illustrator", "Photoshop", "Figma", "Premiere Pro", "After Effects"]
     },
     {
       title: "Systems Architecture",
