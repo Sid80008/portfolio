@@ -13,25 +13,18 @@ export default function ExperiencePage() {
 
   const experiences = [
     {
-      role: "Freelance Creative Developer",
-      company: "Self-Employed",
-      time: "2023 - Present",
-      description: "Partnering with startups and boutique agencies to develop high-performance, visually striking digital platforms. Merging Three.js, GSAP, and Next.js to deliver award-winning experiences.",
-      tech: ["WebGL", "Three.js", "Next.js", "GSAP"]
+      role: "Internship & Personal Projects",
+      company: "",
+      time: "",
+      description: "Gaining hands-on experience through internships and personal projects",
+      tech: []
     },
     {
-      role: "Lead UI Engineer",
-      company: "NIT Hamirpur Tech Board",
-      time: "2022 - 2023",
-      description: "Spearheaded the complete redesign and architectural overhaul of the university's technical portal. Reduced load times by 60% and established a unified design system.",
-      tech: ["React", "TypeScript", "Tailwind CSS", "Figma"]
-    },
-    {
-      role: "Frontend Developer Intern",
-      company: "TechNova Solutions",
-      time: "Summer 2022",
-      description: "Developed responsive dashboard components for an enterprise SaaS product. Integrated complex data visualization libraries and improved state management.",
-      tech: ["Vue.js", "Vuex", "SCSS", "D3.js"]
+      role: "Graphic Design",
+      company: "",
+      time: "",
+      description: "Proficient in Adobe Illustrator, Photoshop, Figma, Premiere Pro, and After Effects",
+      tech: []
     }
   ];
 
@@ -119,7 +112,7 @@ export default function ExperiencePage() {
         {/* Timeline Section */}
         <section className="timeline-section relative">
           {/* Vertical Line */}
-          <div 
+          <div
             ref={lineRef}
             className="absolute left-4 md:left-8 top-4 bottom-4 w-[2px] bg-gradient-to-b from-primary via-secondary to-tertiary hidden sm:block origin-top"
           ></div>
@@ -129,7 +122,7 @@ export default function ExperiencePage() {
               <div key={index} className="experience-item relative flex flex-col sm:flex-row gap-8 sm:gap-16 group">
                 {/* Timeline node */}
                 <div className="timeline-node hidden sm:flex absolute left-4 md:left-8 top-6 -translate-x-1/2 w-4 h-4 rounded-full bg-surface border-2 border-primary z-10 shadow-[0_0_15px_rgba(196,192,255,0.6)]"></div>
-                
+
                 {/* Time alignment */}
                 <div className="experience-time sm:w-1/4 sm:pl-16 pt-5">
                   <span className="font-mono text-sm tracking-widest text-on-surface-variant group-hover:text-primary transition-colors duration-300">{exp.time}</span>
@@ -141,11 +134,11 @@ export default function ExperiencePage() {
                     <h2 className="font-headline text-2xl md:text-3xl font-semibold text-on-surface">{exp.role}</h2>
                     <h3 className="font-mono text-sm text-secondary uppercase tracking-widest mt-1">{exp.company}</h3>
                   </div>
-                  
+
                   <p className="text-on-surface-variant text-base leading-relaxed font-light mt-2">
                     {exp.description}
                   </p>
-                  
+
                   <div className="flex flex-wrap gap-3 mt-4">
                     {exp.tech.map((tech, tIndex) => (
                       <span key={tIndex} className="px-3 py-1 text-xs font-mono tracking-wider text-on-surface bg-surface-container-highest rounded border border-outline-variant/30">

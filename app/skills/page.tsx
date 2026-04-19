@@ -18,10 +18,10 @@ export default function SkillsPage() {
       skills: ["React 18 / Next.js 14", "TypeScript / Node.js", "PostgreSQL / Prisma", "GraphQL / REST APIs", "Tailwind CSS"]
     },
     {
-      title: "Creative Design",
+      title: "Graphic Design",
       icon: "palette",
-      description: "Translating brand identities into cinematic digital experiences through motion and typography.",
-      skills: ["Figma / UI Design", "Framer Motion", "GSAP / Three.js", "Design Systems", "WebGL"]
+      description: "Adobe Illustrator, Photoshop, Figma, Premiere Pro, After Effects",
+      skills: []
     },
     {
       title: "Systems Architecture",
@@ -91,8 +91,8 @@ export default function SkillsPage() {
         {/* Skills Matrix */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {domains.map((domain, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="skill-card opacity-0 translate-y-8 bg-surface-container-low border border-outline-variant/20 p-8 rounded-2xl flex flex-col gap-6 shadow-[0_0_40px_rgba(31,31,37,0.5)] hover:border-outline-variant/60 transition-colors duration-500"
             >
               <div className="h-12 w-12 rounded-full bg-surface-container-highest flex items-center justify-center border border-outline-variant/30 text-primary">
@@ -124,7 +124,7 @@ export default function SkillsPage() {
           </div>
           <div className="relative z-10 hidden md:flex gap-4">
             <div className="animate-spin-slow opacity-20">
-               <span className="material-symbols-outlined text-9xl text-primary">change_history</span>
+              <span className="material-symbols-outlined text-9xl text-primary">change_history</span>
             </div>
           </div>
         </section>
