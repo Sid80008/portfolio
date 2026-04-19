@@ -83,11 +83,13 @@ export default function CustomCursor() {
     requestAnimationFrame(loop);
 
     setIsInteractive(true);
+    document.documentElement.classList.add("custom-cursor-active");
 
     return () => {
       isActive = false;
       window.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseover", handleMouseOver);
+      document.documentElement.classList.remove("custom-cursor-active");
     };
   }, []);
 

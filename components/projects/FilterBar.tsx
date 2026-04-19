@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils/cn";
 const filters = [
   { label: "All", value: "all" },
   { label: "Web Apps", value: "web" },
-  { label: "Mobile / Apps", value: "app" },
+  { label: "Design Software", value: "app" },
   { label: "Open Source", value: "open-source" },
 ];
 
