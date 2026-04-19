@@ -16,9 +16,9 @@ export const skillsData = [
     ]
   },
   {
-    category: "Graphic Designing",
+    category: "Graphic Design",
     items: [
-      { name: "Illustrator", icon: "illustrator" },
+      { name: "Adobe Illustrator", icon: "illustrator" },
       { name: "Photoshop", icon: "photoshop" },
       { name: "Figma", icon: "figma" },
       { name: "Premiere Pro", icon: "premiere" },
