@@ -16,12 +16,12 @@ export const skillsData = [
     ]
   },
   {
-    category: "Creative Tools",
+    category: "Graphic Designing",
     items: [
-      { name: "Photoshop", icon: "photoshop" },
       { name: "Illustrator", icon: "illustrator" },
+      { name: "Photoshop", icon: "photoshop" },
+      { name: "Figma", icon: "figma" },
       { name: "Premiere Pro", icon: "premiere" },
-      { name: "DaVinci Resolve", icon: "davinci" },
       { name: "After Effects", icon: "aftereffects" },
     ]
   }

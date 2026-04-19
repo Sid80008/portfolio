@@ -10,29 +10,27 @@ export interface ExperienceNode {
 export const experienceData: ExperienceNode[] = [
   {
     id: "e1",
-    role: "Full Stack Developer",
-    company: "Development & Personal Projects",
+    role: "Full-Stack Development",
+    company: "Internships & Personal Work",
     date: "",
     description: [
-      "Projects (Websites & Apps): 7 completed",
-      "Personal Projects: ongoing (focused on depth and expansion)",
-      "Integrating AI tools to optimize development and automation workflows."
+      "Gaining experience through internship and personal projects.",
+      "7 completed websites/apps focusing on performance and modern UI."
     ],
-    tech: ["Python", "Java", "Next.js", "SQL", "DBMS"]
+    tech: ["Python", "Next.js", "Java", "SQL", "DBMS"]
   },
   {
     id: "e2",
-    role: "Creative Designer",
-    company: "Freelance & Skill Building",
+    role: "Graphic Designing",
+    company: "Creative Specialization",
     date: "",
     description: [
-      "Graphic Designing: in progress (experience-focused)",
-      "YouTube Thumbnails & Reel Covers: in progress",
-      "Posters & Branding: in progress",
-      "Freelancing Status: Small-scale creative tasks for portfolio development (not monetized yet)"
+      "Professional work using Illustrator, Photoshop, Figma, Premiere Pro, and After Effects.",
+      "Focused on high-quality visuals, branding assets, and video assets."
     ],
-    tech: ["Photoshop", "Illustrator", "Premiere Pro", "DaVinci Resolve", "After Effects"]
+    tech: ["Illustrator", "Photoshop", "Figma", "Premiere Pro", "After Effects"]
   }
 ];
+
 
 
