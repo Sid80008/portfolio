@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { experienceData } from "@/lib/data/experience";
 import TimelineNode from "./TimelineNode";
 
