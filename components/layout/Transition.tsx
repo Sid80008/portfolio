@@ -18,7 +18,7 @@ export const Transition = ({ children }: { children: React.ReactNode }) => {
         initial="initial"
         animate="animate"
         exit="exit"
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
         className="min-h-screen bg-black"
       >
         {children}

@@ -1,22 +1,8 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "../styles/globals.css";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import { Analytics } from "@vercel/analytics/react";
-
-import { Transition } from "@/components/layout/Transition";
-import { SmoothScroll } from "@/components/layout/SmoothScroll";
-import { CustomCursor } from "@/components/ui/CustomCursor";
 import { Preloader } from "@/components/ui/Preloader";
-
-const ParticleField = dynamic(() => import("@/components/canvas/ParticleField"), { ssr: false });
-
-const CanvasBackground = dynamic(
-  () => import("@/components/CanvasBackground"),
-  { ssr: false }
-);
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk", display: "swap" });
@@ -73,20 +59,11 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="bg-background text-on-surface font-body antialiased min-h-screen flex flex-col selection:bg-primary-container selection:text-on-primary-container cursor-none overflow-x-hidden">
+      <body className="bg-black text-white antialiased min-h-screen selection:bg-white/20 selection:text-white overflow-x-hidden">
         <Preloader />
         <div className="noise-overlay" />
-        <CustomCursor />
-        <ParticleField />
-        <SmoothScroll>
-          <Transition>
-            <CanvasBackground />
-            <Navbar />
-            {children}
-            <Footer />
-            <Analytics />
-          </Transition>
-        </SmoothScroll>
+        <Analytics />
+        {children}
       </body>
     </html>
   );
