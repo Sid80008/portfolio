@@ -5,6 +5,16 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { useMagnetic } from "@/hooks/useMagnetic";
+
+const MagneticLinkWrapper = ({ children, className }: { children: React.ReactNode, className?: string }) => {
+  const magneticRef = useMagnetic();
+  return (
+    <div ref={magneticRef} className={className}>
+      {children}
+    </div>
+  );
+};
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -59,17 +69,18 @@ export default function Navbar() {
             {navLinks.map((link) => {
               const isActive = pathname === link.path;
               return (
-                <Link
-                  key={link.name}
-                  href={link.path}
-                  className={`font-headline text-sm font-medium tracking-tight transition-cinematic scale-95 active:scale-90 ${
-                    isActive
-                      ? "text-primary border-b-2 border-primary pb-1"
-                      : "text-on-surface-variant hover:text-on-surface"
-                  }`}
-                >
-                  {link.name}
-                </Link>
+                <MagneticLinkWrapper key={link.name} className="p-2">
+                  <Link
+                    href={link.path}
+                    className={`font-headline text-sm font-medium tracking-tight transition-cinematic scale-95 active:scale-90 ${
+                      isActive
+                        ? "text-primary border-b-2 border-primary pb-1"
+                        : "text-on-surface-variant hover:text-on-surface"
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                </MagneticLinkWrapper>
               );
             })}
           </div>

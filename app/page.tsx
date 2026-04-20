@@ -46,8 +46,8 @@ export default function Home() {
         {/* Asymmetric image element */}
         <div className="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 w-1/3 h-2/3 bg-surface-container-low rounded-xl border border-outline-variant/10 overflow-hidden shadow-[0_0_80px_rgba(228,225,233,0.02)]">
           <Image 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRJnojj5iNZ8uKA-KYfrYVrEaWaQ65bEt4d8v-dGz0hkcWnNLJqdFxsZgrn5W4-I0psk32jNpMdtSaRFJKKKc1K9hmpa4BS-1dTmWdwjF1Ff9Cgaht4833jUZaOWW9EouRgWw6CUPmfqGxGau8Lyh1zLcfOxbemgyUg6tiqYOdFlXiMlo1-qldzmKzmle4X0_nuLG4ecWdI4pmUFHbGuVGsnEb58zSjxFJRxN8iP8S0zw9m_Cb3Ja9yjao20hNzMnZej-hKcycC-Oa" 
-            alt="Abstract creative technology visual" 
+            src="/myimage.png" 
+            alt="Siddharth" 
             fill
             unoptimized
             className="object-cover opacity-80 mix-blend-luminosity hover:mix-blend-normal transition-all duration-700" 
