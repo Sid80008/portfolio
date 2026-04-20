@@ -27,6 +27,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { SiteCursor } from "@/components/ui/SiteCursor";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -60,6 +62,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-black text-white antialiased min-h-screen selection:bg-white/20 selection:text-white overflow-x-hidden">
+        <SiteCursor />
         <Preloader />
         <div className="noise-overlay" />
         <Analytics />
