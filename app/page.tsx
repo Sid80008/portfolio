@@ -271,12 +271,12 @@ function ExperienceView() {
     {
       role: "Internship & Personal Projects",
       description: "Gaining hands-on experience through internships and personal projects across full-stack engineering and design.",
-      time: "2023 – Present",
+      time: "2025 – Present",
     },
     {
       role: "Graphic Design",
       description: "Proficient in Adobe Illustrator, Photoshop, Figma, Premiere Pro, and After Effects. Delivering brand identities and multimedia assets.",
-      time: "2022 – Present",
+      time: "2025 – Present",
     },
   ];
 
@@ -462,7 +462,7 @@ export default function Home() {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="relative w-full min-h-screen bg-black text-white overflow-x-hidden" style={{ fontFamily: "var(--font-space-grotesk, Inter, system-ui, sans-serif)" }}>
+    <div className="relative w-full min-h-screen bg-black text-white overflow-x-hidden cursor-none" style={{ fontFamily: "var(--font-space-grotesk, Inter, system-ui, sans-serif)" }}>
       <SiteCursor />
 
       {/* Persistent 3D Background */}
