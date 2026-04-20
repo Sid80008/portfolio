@@ -1,8 +1,4 @@
-/**
- * lib/logger.ts
- * Minimal structured JSON logger for server-side use.
- * Outputs consistent log lines for observability / log aggregators.
- */
+import * as Sentry from "@sentry/nextjs";
 
 type LogLevel = "info" | "warn" | "error";
 
@@ -20,9 +16,19 @@ function log(level: LogLevel, msg: string, meta: Record<string, unknown> = {}): 
     msg,
     ...meta,
   };
+  
   // Use console.error for warn/error so they surface in Vercel logs
   const fn = level === "info" ? console.log : console.error;
   fn(JSON.stringify(entry));
+
+  // Professional monitoring: Report errors to Sentry
+  if (level === "error") {
+    const error = meta.error instanceof Error ? meta.error : new Error(msg);
+    Sentry.captureException(error, {
+      extra: meta,
+      tags: { level },
+    });
+  }
 }
 
 export const logger = {

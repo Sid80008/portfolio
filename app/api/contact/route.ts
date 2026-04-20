@@ -130,9 +130,10 @@ export async function POST(req: NextRequest) {
     subject: safe.subject,
   });
 
-  // ── 6. Save to Database ────────────────────────────────────────────────────
+  // ── 6. Save to Database (Initial Entry) ──────────────────────────────────
+  let messageRecordId: string | null = null;
   try {
-    await prisma.contactMessage.create({
+    const record = await prisma.contactMessage.create({
       data: {
         name: safe.name,
         email: safe.email,
@@ -140,12 +141,17 @@ export async function POST(req: NextRequest) {
         message: safe.message,
         ip,
         userAgent: req.headers.get("user-agent") || null,
+        deliveryStatus: "PENDING",
       },
     });
+    messageRecordId = record.id;
   } catch (error) {
-    logger.error("Failed to save contact message to DB", { error: String(error), ip });
-    // We can decide not to fail the entire request, or we could fail it.
-    // For now we just log it and proceed to email them, just in case DB is down.
+    // If DB fails, we LOG the full payload as a backup and proceed to email
+    logger.error("DB Save Failed - Proceeding with Email Fallback", { 
+      error: String(error), 
+      payload: safe,
+      ip 
+    });
   }
 
   // ── 7. Send notification to Siddharth ──────────────────────────────────────
@@ -155,22 +161,37 @@ export async function POST(req: NextRequest) {
     timestamp,
   });
 
+  // ── 8. Update Delivery Status in DB ────────────────────────────────────────
+  if (messageRecordId) {
+    try {
+      await prisma.contactMessage.update({
+        where: { id: messageRecordId },
+        data: {
+          deliveryStatus: notify.success ? "SENT" : "FAILED",
+          errorMessage: notify.success ? null : notify.error,
+        },
+      });
+    } catch (error) {
+      logger.warn("Failed to update delivery status", { error: String(error), id: messageRecordId });
+    }
+  }
+
   if (!notify.success) {
     logger.error("Failed to send notification email", { error: notify.error, ip });
     return NextResponse.json(
-      { success: false, error: "Failed to send message via email. Please try again later." },
+      { success: false, error: "Transmission failed. I have archived your message and will review it manually." },
       { status: 502, headers: cors }
     );
   }
 
-  // ── 8. Send auto-reply (non-blocking — don't fail the request if this fails) ─
+  // ── 9. Send auto-reply (Non-blocking) ──────────────────────────────────────
   sendAutoReply(safe.name, safe.email, safe.subject).catch((err) => {
-    logger.error("Auto-reply failed (non-critical)", { error: String(err) });
+    logger.warn("Auto-reply failed (non-critical)", { error: String(err) });
   });
 
-  // ── 9. Success ─────────────────────────────────────────────────────────────
+  // ── 10. Success ────────────────────────────────────────────────────────────
   return NextResponse.json(
-    { success: true, message: "Message sent! I'll reply within 24 hours." },
+    { success: true, message: "Message transmitted! I'll reply within 24 hours." },
     {
       status: 200,
       headers: {

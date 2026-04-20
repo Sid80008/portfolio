@@ -10,15 +10,17 @@ datasource db {
 }
 
 model ContactMessage {
-  id        String        @id @default(cuid())
-  name      String
-  email     String
-  subject   String
-  message   String
-  ip        String?
-  userAgent String?
-  status    MessageStatus @default(UNREAD)
-  createdAt DateTime      @default(now())
+  id             String         @id @default(cuid())
+  name           String
+  email          String
+  subject        String
+  message        String
+  ip             String?
+  userAgent      String?
+  status         MessageStatus  @default(UNREAD)
+  deliveryStatus DeliveryStatus @default(PENDING)
+  errorMessage   String?        @db.Text
+  createdAt      DateTime       @default(now())
 
   @@index([email])
   @@index([createdAt])
@@ -29,6 +31,12 @@ enum MessageStatus {
   READ
   REPLIED
   ARCHIVED
+}
+
+enum DeliveryStatus {
+  PENDING
+  SENT
+  FAILED
 }
 
 model Project {
