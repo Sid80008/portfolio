@@ -7,8 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import Link from "next/link";
-import dynamic from "next/dynamic";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -364,10 +363,10 @@ function ContactView() {
         >
           <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/40">Transmission</span>
           <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-none">
-            Let's build<br />something<br /><span className="text-white/20">exceptional.</span>
+            Let&apos;s build<br />something<br /><span className="text-white/20">exceptional.</span>
           </h2>
           <p className="text-white/50 text-lg font-light leading-relaxed max-w-md">
-            Whether it's a complex web application, a cinematic promotional site, or a scalable backend architecture—reach out.
+            Whether it&apos;s a complex web application, a cinematic promotional site, or a scalable backend architecture—reach out.
           </p>
           <div className="flex flex-col gap-4 border-t border-white/10 pt-8">
             <a href="mailto:siddharthumajwal@gmail.com" className="font-mono text-sm text-white/50 hover:text-white transition-colors">

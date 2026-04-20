@@ -5,7 +5,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
-import dynamic from "next/dynamic";
+
 
 // --- TYPES ---
 type View = "home" | "skills" | "projects" | "experience";
@@ -50,7 +50,7 @@ function ParticleField({ isHovered }: { isHovered: boolean }) {
 function DemoCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
-  const [isInteractive, setIsInteractive] = useState(false);
+
 
   useEffect(() => {
     const dot = dotRef.current;
@@ -71,15 +71,15 @@ function DemoCursor() {
       if (target.closest(".project-card")) {
         gsap.to(ring, { scale: 4, opacity: 0, duration: 0.3 });
         gsap.to(dot, { opacity: 1, duration: 0.2 });
-        setIsInteractive(false);
+
       } else if (target.closest("button, a")) {
         gsap.to(ring, { scale: 2, opacity: 1, duration: 0.3 });
         gsap.to(dot, { opacity: 0, duration: 0.2 });
-        setIsInteractive(true);
+
       } else {
         gsap.to(ring, { scale: 1, opacity: 1, duration: 0.3 });
         gsap.to(dot, { opacity: 1, duration: 0.2 });
-        setIsInteractive(false);
+
       }
     };
 
