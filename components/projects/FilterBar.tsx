@@ -6,9 +6,10 @@ import { cn } from "@/lib/utils/cn";
 
 const filters = [
   { label: "All", value: "all" },
-  { label: "Web Apps", value: "web" },
-  { label: "Design Software", value: "app" },
-  { label: "Open Source", value: "open-source" },
+  { label: "Web Apps", value: "WEB" },
+  { label: "Design Software", value: "DESIGN" },
+  { label: "Creative Apps", value: "APP" },
+  { label: "Open Source", value: "CODE" },
 ];
 
 export default function FilterBar() {

@@ -13,21 +13,29 @@ export interface Project {
 export const projectsData: Project[] = [
   {
     id: "p1",
-    title: "Web & Mobile Development",
-    description: "7 completed projects across various domains, focusing on clean architecture and high performance.",
+    title: "Intelligence Hub",
+    description: "A centralized dashboard for real-time data analytics and system monitoring. Built for high-volume signal processing.",
     category: "web",
     image: "/logo.png",
     link: "#",
-    tech: ["Python", "Java", "Next.js", "SQL"]
+    tech: ["Python", "Java", "Next.js", "PostgreSQL", "TailwindCSS"]
   },
   {
     id: "p2",
     title: "Creative Design Portfolio",
-    description: "Expert work in YouTube Thumbnails, Reel Covers, and Brand Identity. Currently focused on skill-building and high-quality creative assets.",
+    description: "Premium visual assets including YouTube Thumbnails, Reel Covers, and Brand Identity. Designed for maximum engagement.",
     category: "app",
     image: "/logo.png",
     link: "#",
-    tech: ["Photoshop", "Premiere Pro", "DaVinci Resolve"]
+    tech: ["Photoshop", "Illustrator", "Blender", "AutoCAD", "Figma", "After Effects"]
+  },
+  {
+    id: "p3",
+    title: "Open Source Engine",
+    description: "Contribution to core mathematical systems and animation libraries. Focused on performance optimization and developer tooling.",
+    category: "open-source",
+    image: "/logo.png",
+    link: "#",
+    tech: ["C++", "Three.js", "GLSL", "React Native"]
   }
 ];
-

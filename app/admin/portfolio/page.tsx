@@ -1,110 +1,164 @@
 import React from "react";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/db";
 import { 
+  ProjectCategory, 
+  SkillCategory 
+} from "@prisma/client";
+import { 
+  FolderKanban, 
   Plus, 
-  Trash2, 
-  RefreshCw, 
-  Layers, 
-  Database
+  ChevronLeft,
+  Settings,
+  Package,
+  Layers,
+  GraduationCap,
+  ExternalLink,
+  Github,
+  Trophy,
+  Pencil,
+  Trash2
 } from "lucide-react";
-import { syncFromStatic, deleteProject, deleteSkill } from "@/lib/actions/admin";
+import Link from "next/link";
 
-const prisma = new PrismaClient();
-
-export default async function AdminPortfolioPage() {
-  const [projects, skills] = await Promise.all([
+async function getPortfolioData() {
+  const [projects, skills, experience] = await Promise.all([
     prisma.project.findMany({ orderBy: { order: "asc" } }),
-    prisma.skill.findMany({ orderBy: { category: "asc" } }),
+    prisma.skill.findMany({ orderBy: { category: "asc", order: "asc" } }),
+    prisma.experience.findMany({ orderBy: { order: "asc" } }),
   ]);
+  return { projects, skills, experience };
+}
+
+export default async function AdminPortfolio() {
+  const { projects, skills, experience } = await getPortfolioData();
 
   return (
-    <div className="space-y-12">
-      <header className="flex justify-between items-end">
+    <div className="min-h-screen bg-[#050505] text-white p-8 lg:p-12 mb-20 selection:bg-white/10">
+      {/* Header */}
+      <header className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
         <div>
-          <h1 className="text-4xl font-black italic tracking-tighter mb-2">PORTFOLIO ENGINE</h1>
-          <p className="text-white/40 font-mono text-sm tracking-widest uppercase">Managing dynamic resource nodes</p>
+          <Link href="/admin/dashboard" className="flex items-center gap-2 text-white/30 hover:text-white transition-colors text-[10px] font-mono uppercase tracking-[0.2em] mb-4">
+            <ChevronLeft size={12} /> Return to Core
+          </Link>
+          <h1 className="text-4xl font-black tracking-tighter">PORTFOLIO MGT</h1>
+          <p className="text-white/40 text-sm mt-2 font-mono uppercase tracking-widest">Content Orchestration Layer</p>
         </div>
-        <form action={syncFromStatic}>
-          <button className="flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl hover:bg-white hover:text-black transition-all text-xs font-bold uppercase tracking-widest group">
-            <RefreshCw size={14} className="group-hover:rotate-180 transition-transform duration-700" />
-            Sync from Static Data
-          </button>
-        </form>
+        
+        <button className="flex items-center gap-3 px-8 py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-white/90 active:scale-95 transition-all">
+          <Plus size={16} /> New Asset
+        </button>
       </header>
 
-      {/* Projects Section */}
-      <section className="space-y-6">
-        <div className="flex justify-between items-center px-2">
-          <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
-            <Layers size={20} className="text-white/40" />
-            Live Projects
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {projects.map((project) => (
-            <div key={project.id} className="bg-black border border-white/5 rounded-3xl overflow-hidden group">
-              <div className="h-40 bg-white/5 relative flex items-center justify-center">
-                 <span className="text-[10px] font-mono text-white/10 uppercase tracking-[0.4em] transform -rotate-12 select-none">
-                   {project.category}
-                 </span>
-                 <div className="absolute top-4 right-4 flex gap-2">
-                   <form action={deleteProject.bind(null, project.id)}>
-                     <button className="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-colors">
-                       <Trash2 size={12} />
-                     </button>
-                   </form>
-                 </div>
-              </div>
-              <div className="p-6">
-                <h3 className="font-bold mb-1">{project.title}</h3>
-                <p className="text-xs text-white/40 line-clamp-2 mb-4 leading-relaxed">{project.description}</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {project.tags.map(tag => (
-                    <span key={tag} className="px-2 py-0.5 bg-white/5 border border-white/10 rounded-md text-[9px] font-mono text-white/40 uppercase">
-                      {tag}
-                    </span>
-                  ))}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-12">
+        {/* Projects Column */}
+        <div className="xl:col-span-12">
+            <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center border border-blue-500/20">
+                        <Package size={16} className="text-blue-400" />
+                    </div>
+                    <h2 className="text-2xl font-black italic tracking-tight">PROJECTS</h2>
                 </div>
-              </div>
             </div>
-          ))}
-          
-          <button className="border-2 border-dashed border-white/5 rounded-3xl p-10 flex flex-col items-center justify-center gap-4 text-white/20 hover:text-white hover:border-white/20 transition-all group">
-            <div className="p-4 bg-white/5 rounded-2xl group-hover:scale-110 transition-transform">
-              <Plus size={24} />
-            </div>
-            <span className="text-xs font-mono uppercase tracking-widest">Register New Project</span>
-          </button>
-        </div>
-      </section>
 
-      {/* Skills Section */}
-      <section className="space-y-6">
-        <h2 className="text-xl font-bold tracking-tight px-2 flex items-center gap-2">
-          <Database size={20} className="text-white/40" />
-          Technical Arsenal
-        </h2>
-        <div className="bg-black border border-white/5 rounded-3xl overflow-hidden">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 divide-x divide-y divide-white/5">
-            {skills.map((skill) => (
-              <div key={skill.id} className="p-6 group hover:bg-white/[0.02] transition-colors relative">
-                <p className="text-[10px] font-mono text-white/20 uppercase mb-2">{skill.category}</p>
-                <h4 className="text-sm font-bold">{skill.name}</h4>
-                <form action={deleteSkill.bind(null, skill.id)} className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="p-1.5 text-red-500 hover:bg-red-500/10 rounded transition-colors">
-                    <Trash2 size={10} />
-                  </button>
-                </form>
-              </div>
-            ))}
-            <button className="p-6 flex flex-col items-center justify-center gap-2 text-white/10 hover:text-white/40 transition-colors">
-              <Plus size={16} />
-              <span className="text-[10px] font-mono uppercase tracking-widest">Add Skill</span>
-            </button>
-          </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {projects.map((project) => (
+                    <div key={project.id} className="bg-[#0a0a0a] border border-white/10 rounded-[28px] overflow-hidden group hover:border-white/30 transition-all duration-300">
+                        <div className="h-40 bg-white/5 relative overflow-hidden">
+                            {project.imageUrl && (
+                                <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-700" />
+                            )}
+                            <div className="absolute top-4 right-4 flex gap-2 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
+                                <button className="p-2 bg-black/60 backdrop-blur-md rounded-lg text-white hover:text-blue-400 transition-colors"><Pencil size={14} /></button>
+                                <button className="p-2 bg-black/60 backdrop-blur-md rounded-lg text-white hover:text-red-400 transition-colors"><Trash2 size={14} /></button>
+                            </div>
+                            <div className="absolute top-4 left-4">
+                                <span className="bg-blue-500/10 text-blue-400 text-[9px] font-mono uppercase tracking-[0.2em] px-2.5 py-1 rounded-md border border-blue-500/20 backdrop-blur-sm">
+                                    {project.category}
+                                </span>
+                            </div>
+                        </div>
+                        <div className="p-6">
+                            <h3 className="text-lg font-bold mb-2 tracking-tight line-clamp-1">{project.title}</h3>
+                            <p className="text-white/40 text-xs line-clamp-2 mb-6 font-mono">{project.description}</p>
+                            <div className="flex items-center gap-4 text-white/20">
+                                {project.liveUrl && <ExternalLink size={14} className="hover:text-blue-400 transition-colors cursor-pointer" />}
+                                {project.githubUrl && <Github size={14} className="hover:text-white transition-colors cursor-pointer" />}
+                                {project.featured && <Trophy size={14} className="text-amber-500/40" />}
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
-      </section>
+
+        {/* Skills & Experience Row */}
+        <div className="xl:col-span-5">
+            <div className="flex items-center gap-3 mb-8">
+                <div className="w-8 h-8 bg-emerald-500/10 rounded-lg flex items-center justify-center border border-emerald-500/20">
+                    <GraduationCap size={16} className="text-emerald-400" />
+                </div>
+                <h2 className="text-2xl font-black italic tracking-tight uppercase">Skills</h2>
+            </div>
+            
+            <div className="bg-[#0a0a0a] border border-white/10 rounded-[32px] p-8 space-y-8">
+                {Object.values(SkillCategory).map((cat) => {
+                    const catSkills = skills.filter(s => s.category === cat);
+                    if (catSkills.length === 0) return null;
+                    return (
+                        <div key={cat} className="space-y-4">
+                            <h4 className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/20">{cat}</h4>
+                            <div className="flex flex-wrap gap-2">
+                                {catSkills.map(skill => (
+                                    <span key={skill.id} className="text-xs bg-white/5 border border-white/10 px-3 py-1.5 rounded-xl flex items-center gap-2 group hover:bg-white/10 transition-colors">
+                                        {skill.name}
+                                        <button className="opacity-0 group-hover:opacity-100 transition-opacity text-white/40 hover:text-white"><Pencil size={10}/></button>
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
+        </div>
+
+        <div className="xl:col-span-7">
+            <div className="flex items-center gap-3 mb-8">
+                <div className="w-8 h-8 bg-purple-500/10 rounded-lg flex items-center justify-center border border-purple-500/20">
+                    <Layers size={16} className="text-purple-400" />
+                </div>
+                <h2 className="text-2xl font-black italic tracking-tight uppercase">Experience</h2>
+            </div>
+
+            <div className="space-y-4">
+                {experience.map((exp) => (
+                    <div key={exp.id} className="bg-[#0a0a0a] border border-white/10 p-6 rounded-[24px] hover:border-white/20 transition-all flex items-center justify-between group">
+                        <div className="flex items-center gap-6">
+                            <div className="w-12 h-12 bg-white/5 rounded-xl flex flex-col items-center justify-center text-white/20 font-black italic leading-none group-hover:bg-white group-hover:text-black transition-all">
+                                <span className="text-[10px]">{exp.startDate.getFullYear()}</span>
+                            </div>
+                            <div>
+                                <h3 className="font-bold tracking-tight">{exp.title}</h3>
+                                <div className="flex items-center gap-2 text-[10px] font-mono text-white/30 uppercase tracking-widest mt-1">
+                                    <span>{exp.org}</span>
+                                    {exp.current && <span className="text-emerald-500/60">• Present</span>}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                            <button className="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-colors"><Pencil size={14} /></button>
+                            <button className="p-3 bg-white/5 hover:bg-red-500/20 text-red-400 rounded-xl transition-colors"><Trash2 size={14} /></button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+      </div>
+
+      <footer className="mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] font-mono uppercase tracking-[0.4em] text-white/20">
+          <div>Sid. Operations — Admin Unit v1.0.0</div>
+          <div>Synchronized with Neural Database</div>
+      </footer>
     </div>
   );
 }

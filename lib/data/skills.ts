@@ -8,11 +8,21 @@ export const skillsData = [
       { name: "Java", icon: "java" },
       { name: "C", icon: "c" },
       { name: "C++", icon: "cpp" },
-      { name: "JSON", icon: "json" },
       { name: "DBMS", icon: "database" },
       { name: "SQL", icon: "sql" },
-      { name: "AI Tools", icon: "ai" },
-      { name: "Web Technologies", icon: "globe" },
+      { name: "Next.js", icon: "globe" },
+      { name: "TailwindCSS", icon: "zap" },
+    ]
+  },
+  {
+    category: "AI Tools",
+    items: [
+        { name: "ChatGPT", icon: "ai" },
+        { name: "Grok", icon: "ai" },
+        { name: "DeepSeek", icon: "ai" },
+        { name: "Claude", icon: "ai" },
+        { name: "Gemini", icon: "ai" },
+        { name: "Midjourney", icon: "ai" },
     ]
   },
   {
@@ -21,9 +31,10 @@ export const skillsData = [
       { name: "Adobe Illustrator", icon: "illustrator" },
       { name: "Photoshop", icon: "photoshop" },
       { name: "Figma", icon: "figma" },
+      { name: "Blender", icon: "blender" },
+      { name: "AutoCAD", icon: "autocad" },
       { name: "Premiere Pro", icon: "premiere" },
       { name: "After Effects", icon: "aftereffects" },
     ]
   }
 ];
-

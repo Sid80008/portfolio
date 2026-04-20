@@ -1,14 +1,26 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, Suspense } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef, useMemo, Suspense } from "react";
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
 import { 
-  ArrowRight
+  ArrowRight, 
+  GitHub, 
+  ExternalLink, 
+  Mail, 
+  Send, 
+  User, 
+  MessageSquare, 
+  ChevronRight,
+  Code2,
+  Terminal,
+  Cpu,
+  Zap
 } from "lucide-react";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 import { Project, Skill, Experience } from "@prisma/client";
-import { Particles } from "@/components/canvas/ParticleField";
 import ProjectGrid from "@/components/projects/ProjectGrid";
+import { SearchParamsProvider } from "@/components/providers/SearchParamsProvider";
 
 type View = "home" | "skills" | "projects" | "experience" | "contact";
 
@@ -18,128 +30,258 @@ interface MasterPortfolioProps {
   initialExperiences?: Experience[];
 }
 
-// ─── 1. SITE CURSOR ─────────────────────────────────────────────────────────
+// ─── 1. PARTICLE FIELD ──────────────────────────────────────────────────────
+
+function Stardust() {
+  const count = 75000;
+  const { positions, colors } = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    const col = new Float32Array(count * 3);
+    
+    // Cosmic Palette
+    const palette = [
+        new THREE.Color("#A855F7"), // Purple
+        new THREE.Color("#3B82F6"), // Blue
+        new THREE.Color("#F59E0B"), // Amber
+        new THREE.Color("#22D3EE"), // Cyan
+    ];
+
+    for (let i = 0; i < count; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * 15;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 15;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 15;
+      
+      const color = palette[Math.floor(Math.random() * palette.length)];
+      col[i * 3] = color.r;
+      col[i * 3 + 1] = color.g;
+      col[i * 3 + 2] = color.b;
+    }
+    return { positions: pos, colors: col };
+  }, []);
+
+  const stardustRef = useRef<THREE.Points>(null!);
+  useFrame((state, delta) => {
+    if (stardustRef.current) {
+      // Speed set to 0.9x
+      stardustRef.current.rotation.x -= (delta * 0.9) / 20;
+      stardustRef.current.rotation.y -= (delta * 0.9) / 25;
+    }
+  });
+
+  return (
+    <points ref={stardustRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={count}
+          array={positions}
+          itemSize={3}
+        />
+        <bufferAttribute
+          attach="attributes-color"
+          count={count}
+          array={colors}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.015}
+        vertexColors
+        transparent
+        opacity={0.3}
+        sizeAttenuation
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
+  );
+}
+
+function Particles({ isHovered }: { isHovered: boolean }) {
+  const count = 2500;
+  
+  const { positions, colors } = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    const col = new Float32Array(count * 3);
+    
+    // Color Palette for "Coloured Dust"
+    const palette = [
+        new THREE.Color("#A855F7"), // Purple
+        new THREE.Color("#3B82F6"), // Blue
+        new THREE.Color("#F59E0B"), // Amber
+        new THREE.Color("#ffffff"), // Pure White
+    ];
+
+    for (let i = 0; i < count; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * 10;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 10;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 10;
+      
+      // 70% Neutral/White, 30% Vibrant Dust
+      const isDust = Math.random() > 0.7;
+      const color = isDust 
+        ? palette[Math.floor(Math.random() * 3)] 
+        : palette[3];
+        
+      col[i * 3] = color.r;
+      col[i * 3 + 1] = color.g;
+      col[i * 3 + 2] = color.b;
+    }
+    return { positions: pos, colors: col };
+  }, []);
+
+  const points = useRef<THREE.Points>(null!);
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
+    const posAttr = points.current.geometry.attributes.position.array as Float32Array;
+    
+    for (let i = 0; i < count; i++) {
+      const x = positions[i * 3];
+      const y = positions[i * 3 + 1];
+      
+      const factor = isHovered ? 0.02 : 0.05;
+      posAttr[i * 3] += Math.sin(time + x) * factor;
+      posAttr[i * 3 + 1] += Math.cos(time + y) * factor;
+    }
+    points.current.geometry.attributes.position.needsUpdate = true;
+    points.current.rotation.y += 0.001;
+  });
+
+  return (
+    <points ref={points}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={count}
+          array={positions}
+          itemSize={3}
+        />
+        <bufferAttribute
+          attach="attributes-color"
+          count={count}
+          array={colors}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.018}
+        vertexColors
+        transparent
+        opacity={0.4}
+        sizeAttenuation
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
+  );
+}
+
+// ─── 2. CURSOR ──────────────────────────────────────────────────────────────
+
 function SiteCursor() {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const dotRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleMove = (e: MouseEvent) => setPosition({ x: e.clientX, y: e.clientY });
-    window.addEventListener("mousemove", handleMove);
-    return () => window.removeEventListener("mousemove", handleMove);
+    const onMouseMove = (e: MouseEvent) => {
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+      }
+      if (ringRef.current) {
+        ringRef.current.style.transform = `translate3d(${e.clientX - 12}px, ${e.clientY - 12}px, 0)`;
+      }
+    };
+    window.addEventListener("mousemove", onMouseMove);
+    return () => window.removeEventListener("mousemove", onMouseMove);
   }, []);
 
   return (
-    <motion.div
-      className="fixed top-0 left-0 w-8 h-8 pointer-events-none z-[9999] mix-blend-difference hidden md:block"
-      animate={{
-        x: position.x - 16,
-        y: position.y - 16,
-      }}
-      transition={{ type: "spring", damping: 20, stiffness: 200, mass: 0.5 }}
-    >
-      <div className="w-full h-full border border-white rounded-full flex items-center justify-center">
-        <div className="w-1 h-1 bg-white rounded-full" />
-      </div>
-    </motion.div>
+    <>
+      <div ref={dotRef} className="fixed top-0 left-0 w-1.5 h-1.5 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference" />
+      <div ref={ringRef} className="fixed top-0 left-0 w-8 h-8 border border-white/30 rounded-full pointer-events-none z-[9998] transition-transform duration-150 ease-out mix-blend-difference" />
+    </>
   );
 }
 
-// ─── 2. VIEW WRAPPER ────────────────────────────────────────────────────────
-function wrap(children: React.ReactNode, id: string) {
-  return (
-    <motion.section
-      key={id}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-      className="relative z-10"
-    >
-      {children}
-    </motion.section>
-  );
-}
+// ─── 3. VIEWS ────────────────────────────────────────────────────────────────
 
-// ─── 3. RESILIENT SOCIAL ICONS (SVG) ─────────────────────────────────────────
-const GithubSVG = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-  </svg>
+const wrap = (children: React.ReactNode, key: string) => (
+  <motion.div
+    key={key}
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -10 }}
+    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+    className="w-full"
+  >
+    {children}
+  </motion.div>
 );
 
-const LinkedinSVG = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-    <rect x="2" y="9" width="4" height="12"></rect>
-    <circle cx="4" cy="4" r="2"></circle>
-  </svg>
-);
-
-const TwitterSVG = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
-  </svg>
-);
-
-// ─── 4. SUB-VIEWS ──────────────────────────────────────────────────────────
-
-function HomeView({ onNavigate, onHover }: { onNavigate: (v: View) => void; onHover: (h: boolean) => void }) {
+// Home
+function HomeView({ onNavigate, onHover }: { onNavigate: (v: View) => void, onHover: (h: boolean) => void }) {
   return wrap(
-    <div className="min-h-[calc(100vh-80px)] flex flex-col justify-center px-6 md:px-16 max-w-7xl mx-auto w-full">
+    <div className="flex flex-col items-center justify-center min-h-[90vh] text-center px-6">
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className="space-y-4"
+        className="relative mb-8"
+      >
+        <h1 className="text-7xl md:text-9xl font-black tracking-tighter leading-[0.8] mb-8">
+            SIDDHARTH<br/>UMAJWAL
+        </h1>
+        <div className="flex flex-col items-center gap-6 mt-8">
+            <span className="font-mono text-sm md:text-base uppercase tracking-[0.5em] text-white/40 font-bold">Creative Technologist</span>
+            <div className="flex items-center justify-center gap-4 text-white/20 font-mono text-[10px] uppercase tracking-widest">
+                <span className="flex items-center gap-2"><Cpu size={12}/> AI Integrated</span>
+                <span className="w-1 h-1 rounded-full bg-white/20" />
+                <span className="flex items-center gap-2"><Zap size={12}/> High Performance</span>
+            </div>
+        </div>
+      </motion.div>
+
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 1 }}
+        className="text-white/40 max-w-xl text-lg mb-12 font-medium leading-relaxed"
         onMouseEnter={() => onHover(true)}
         onMouseLeave={() => onHover(false)}
       >
-        <span className="font-mono text-xs uppercase tracking-[0.4em] text-white/40 block mb-4">Integrated Creative Engineer</span>
-        <h1 className="text-7xl md:text-[10rem] font-black tracking-tighter leading-[0.8] italic uppercase">
-          Siddharth<br />
-          <span className="text-white/20">Umajwal</span>
-        </h1>
-        
-        <div className="flex flex-col md:flex-row md:items-center gap-10 pt-12">
-          <p className="text-white/40 text-lg md:text-xl max-w-xl leading-relaxed font-medium">
-            Architecting high-performance digital ecosystems where deep engineering meets premium visual aesthetics.
-          </p>
-          
-          <div className="flex gap-4">
-            <button
-              onClick={() => onNavigate("projects")}
-              className="px-8 py-4 bg-white text-black font-black uppercase text-xs tracking-widest rounded-full hover:bg-white/90 transition-all flex items-center gap-3 group cursor-none"
-            >
-              The Repository
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button
-              onClick={() => onNavigate("contact")}
-              className="px-8 py-4 border border-white/20 text-white font-black uppercase text-xs tracking-widest rounded-full hover:border-white/60 transition-all cursor-none"
-            >
-              Hire Me
-            </button>
-          </div>
-        </div>
+        Engineering deep visual experiences through the intersection of advanced mathematics and premium design.
+      </motion.p>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.7, duration: 0.8 }}
+        className="flex flex-col md:flex-row items-center gap-4"
+      >
+        <button
+          onClick={() => onNavigate("projects")}
+          className="group px-8 py-4 bg-white text-black font-black uppercase tracking-widest text-xs rounded-2xl flex items-center gap-3 hover:bg-white/90 active:scale-95 transition-all"
+        >
+          Explore Work <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+        </button>
+        <button
+          onClick={() => onNavigate("contact")}
+          className="px-8 py-4 border border-white/10 hover:border-white/30 hover:bg-white/5 rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95"
+        >
+          Hire Me
+        </button>
       </motion.div>
-      
-      <div className="absolute bottom-10 left-16 flex gap-8 text-[10px] font-mono text-white/20 uppercase tracking-[0.3em]">
-        <span>Neon DB Connected</span>
-        <span>Resend Operational</span>
-        <span>Sentry Live</span>
-      </div>
     </div>,
     "home"
   );
 }
 
+// Skills
 function SkillsView({ skills }: { skills: Skill[] }) {
   const groupedSkills = useMemo(() => {
     const groups: Record<string, Skill[]> = {};
     skills.forEach(s => {
-      const cat = s.category || "UNSPECIFIED";
-      if (!groups[cat]) groups[cat] = [];
-      groups[cat].push(s);
+      if (!groups[s.category]) groups[s.category] = [];
+      groups[s.category].push(s);
     });
     return groups;
   }, [skills]);
@@ -147,31 +289,27 @@ function SkillsView({ skills }: { skills: Skill[] }) {
   return wrap(
     <div className="min-h-[calc(100vh-80px)] px-6 md:px-16 py-16 max-w-7xl mx-auto w-full">
       <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2, duration: 0.6 }}>
-        <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/40">The Arsenal</span>
-        <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-4 mt-2">Technical Mastery</h2>
-        <p className="text-white/40 text-lg mb-12 max-w-2xl">
-          A comprehensive overview of the specialized tools and languages I deploy.
-        </p>
+        <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/40">Expertise Stack</span>
+        <h2 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 mt-4 italic">THE ARSENAL</h2>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {Object.entries(groupedSkills).map(([category, items], i) => (
           <motion.div
             key={category}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 + i * 0.12, duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
-            className="bg-white/5 border border-white/10 p-8 rounded-2xl flex flex-col gap-6 backdrop-blur-sm"
+            transition={{ delay: 0.3 + i * 0.1, duration: 0.8 }}
+            className="bg-[#0a0a0a] border border-white/10 p-10 rounded-[32px] hover:border-white/30 transition-all duration-500"
           >
-            <h3 className="text-xl font-black uppercase tracking-widest text-white/80">{category.replace('_', ' ')}</h3>
-            <div className="h-px w-full bg-white/10" />
-            <ul className="flex flex-wrap gap-2">
+            <h3 className="text-sm font-black uppercase tracking-[0.3em] text-white/20 mb-8">{category.replace('_', ' ')}</h3>
+            <div className="flex flex-wrap gap-3">
               {items.map((skill) => (
-                <li key={skill.id} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-mono text-white/70">
+                <div key={skill.id} className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-white hover:bg-white hover:text-black transition-all duration-300">
                   {skill.name}
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
           </motion.div>
         ))}
       </div>
@@ -180,52 +318,55 @@ function SkillsView({ skills }: { skills: Skill[] }) {
   );
 }
 
+// Projects
 function ProjectsView({ projects }: { projects: Project[] }) {
   return wrap(
     <div className="min-h-[calc(100vh-80px)] px-6 md:px-16 py-16 max-w-7xl mx-auto w-full">
       <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2, duration: 0.6 }}>
-        <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-4">Selected Works</h2>
-        <p className="text-white/40 text-lg mb-8 max-w-2xl">
-          A curated intersection of deep engineering and premium visual design.
-        </p>
+        <h2 className="text-6xl md:text-8xl font-black tracking-tighter mb-4 italic">SELECTED WORKS</h2>
+        <p className="text-white/40 text-lg mb-12 max-w-2xl font-medium">A selection of premium interfaces and deep-engineering systems.</p>
       </motion.div>
-      <Suspense fallback={<div className="animate-pulse py-20 text-center text-white/20 font-mono tracking-widest uppercase">Initializing Projects...</div>}>
+      <Suspense fallback={<div className="animate-pulse py-20 text-center text-white/20 font-mono tracking-widest uppercase">Initializing Canvas...</div>}>
+        <SearchParamsProvider>
           <ProjectGrid initialProjects={projects} />
+        </SearchParamsProvider>
       </Suspense>
     </div>,
     "projects"
   );
 }
 
+// Experience
 function ExperienceView({ experiences }: { experiences: Experience[] }) {
   return wrap(
     <div className="min-h-[calc(100vh-80px)] px-6 md:px-16 py-16 max-w-7xl mx-auto w-full">
       <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2, duration: 0.6 }}>
-        <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/40">The Timeline</span>
-        <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-4 mt-2">Experience &amp; Evolution</h2>
+        <h2 className="text-6xl md:text-8xl font-black tracking-tighter mb-16 italic">EVOLUTION</h2>
       </motion.div>
 
-      <div className="relative mt-20">
-        <div className="absolute left-0 top-0 w-[2px] h-full bg-gradient-to-b from-white/40 via-white/10 to-transparent" />
-        <div className="flex flex-col gap-14 pl-10">
+      <div className="relative">
+        <div className="absolute left-0 top-0 w-[2px] h-full bg-gradient-to-b from-white/30 via-white/5 to-transparent" />
+        <div className="flex flex-col gap-16 pl-12">
           {experiences.map((exp, i) => (
             <motion.div
               key={exp.id}
               initial={{ opacity: 0, x: -60 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 + i * 0.15, duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
-              className="relative"
+              transition={{ delay: 0.3 + i * 0.1, duration: 0.8 }}
+              className="relative group"
             >
-              <div className="absolute -left-[47px] top-5 w-4 h-4 bg-white rounded-full shadow-[0_0_15px_white]" />
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-md hover:border-white/30 transition-colors duration-500">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
-                  <h3 className="text-2xl font-black uppercase italic">{exp.title}</h3>
-                  <span className="font-mono text-sm text-white/40">
-                    {new Date(exp.startDate).getFullYear()} – {exp.current ? "Present" : exp.endDate ? new Date(exp.endDate).getFullYear() : ""}
+              <div className="absolute -left-[57px] top-6 w-4 h-4 bg-white rounded-full transition-transform group-hover:scale-150" />
+              <div className="bg-[#0a0a0a] border border-white/10 rounded-[32px] p-10 hover:border-white/30 transition-all duration-500">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                  <div>
+                    <h3 className="text-3xl font-black italic tracking-tighter mb-1">{exp.title}</h3>
+                    <div className="text-[10px] font-mono text-white/40 uppercase tracking-[0.3em]">{exp.org}</div>
+                  </div>
+                  <span className="font-mono text-xs text-white/20 uppercase tracking-widest bg-white/5 px-4 py-2 rounded-xl border border-white/5">
+                    {new Date(exp.startDate).getFullYear()} &mdash; {exp.current ? "PRESENT" : exp.endDate ? new Date(exp.endDate).getFullYear() : ""}
                   </span>
                 </div>
-                <p className="text-white/50 leading-relaxed max-w-3xl">{exp.description}</p>
-                <div className="mt-4 text-xs font-mono text-white/20 uppercase tracking-[0.3em]">{exp.org}</div>
+                <p className="text-white/50 text-lg leading-relaxed max-w-3xl">{exp.description}</p>
               </div>
             </motion.div>
           ))}
@@ -236,33 +377,102 @@ function ExperienceView({ experiences }: { experiences: Experience[] }) {
   );
 }
 
+// Contact
 function ContactView() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState<null | 'success' | 'error'>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setStatus(null);
+    
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      message: formData.get("message"),
+    };
+
+    try {
+      const resp = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (resp.ok) {
+        setStatus('success');
+        (e.target as HTMLFormElement).reset();
+      } else {
+        setStatus('error');
+      }
+    } catch (err) {
+      setStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return wrap(
-    <div className="min-h-[calc(100vh-80px)] px-6 md:px-16 py-16 max-w-7xl mx-auto w-full flex items-center justify-center">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-xl text-center space-y-8"
-      >
-        <h2 className="text-6xl md:text-8xl font-black tracking-tighter italic uppercase underline decoration-white/10 underline-offset-8">Let&apos;s Work.</h2>
-        <p className="text-white/40 text-xl font-medium">Ready to architect your next high-performance ecosystem?</p>
-        <div className="pt-10 flex flex-col items-center gap-4">
-          <a href="mailto:siddharthumajwal@gmail.com" className="text-3xl md:text-5xl font-black tracking-tight hover:text-white/60 transition-all lowercase cursor-none">
-            siddharthumajwal@gmail.com
-          </a>
-          <div className="flex gap-10 pt-10 text-white/20">
-             <a href="#" className="hover:text-white transition-colors cursor-none"><GithubSVG /></a>
-             <a href="#" className="hover:text-white transition-colors cursor-none"><LinkedinSVG /></a>
-             <a href="#" className="hover:text-white transition-colors cursor-none"><TwitterSVG /></a>
-          </div>
+    <div className="min-h-[calc(100vh-80px)] px-6 md:px-16 py-16 max-w-7xl mx-auto w-full">
+      {/* Upper Section: Text + Photo */}
+      <div className="flex flex-col md:flex-row items-center justify-between gap-16 mb-24">
+        <div className="max-w-2xl">
+          <h2 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 italic">LET'S BUILD</h2>
+          <p className="text-white/50 text-xl leading-relaxed font-medium">
+            Ready to initiate a new project or collaboration? My system is currently open for high-engagement opportunities.
+          </p>
         </div>
-      </motion.div>
+        <div className="relative w-72 h-72 lg:w-96 lg:h-96">
+            <div className="absolute inset-0 bg-white/5 rounded-[40px] rotate-6 border border-white/10" />
+            <div className="absolute inset-0 bg-white/5 rounded-[40px] -rotate-3 border border-white/10" />
+            <div className="relative w-full h-full bg-[#0a0a0a] border border-white/10 rounded-[40px] overflow-hidden grayscale hover:grayscale-0 transition-all duration-700">
+                <img src="/myimage.png" alt="Siddharth" className="w-full h-full object-cover object-top opacity-80" />
+            </div>
+        </div>
+      </div>
+
+      {/* Lower Section: Full Width Form */}
+      <div className="bg-[#0a0a0a] border border-white/10 p-12 lg:p-20 rounded-[48px] relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+        
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="space-y-8">
+                <div className="space-y-2">
+                    <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/30 ml-2">Identify Payload</label>
+                    <input name="name" required type="text" placeholder="Your Name" className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-8 focus:outline-none focus:bg-white/10 focus:border-white/30 transition-all" />
+                </div>
+                <div className="space-y-2">
+                    <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/30 ml-2">Communication Channel</label>
+                    <input name="email" required type="email" placeholder="email@address.com" className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-8 focus:outline-none focus:bg-white/10 focus:border-white/30 transition-all" />
+                </div>
+            </div>
+            <div className="space-y-8">
+                <div className="space-y-2">
+                    <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/30 ml-2">Signal Content</label>
+                    <textarea name="message" required placeholder="Briefly describe your requirements..." className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-8 h-[168px] focus:outline-none focus:bg-white/10 focus:border-white/30 transition-all resize-none" />
+                </div>
+            </div>
+            
+            <div className="md:col-span-2 flex flex-col items-center gap-6 mt-4">
+                <button 
+                  disabled={isSubmitting}
+                  className="px-12 py-5 bg-white text-black font-black uppercase tracking-widest text-xs rounded-2xl hover:bg-white/90 active:scale-95 transition-all flex items-center gap-3 disabled:opacity-50"
+                >
+                    {isSubmitting ? 'Transmitting...' : 'Transmit Signal'} <Send size={16} />
+                </button>
+                {status === 'success' && <p className="text-emerald-400 font-mono text-[10px] uppercase tracking-widest">Signal transmitted successfully.</p>}
+            </div>
+        </form>
+      </div>
     </div>,
     "contact"
   );
 }
 
-// ─── 5. MASTER ENGINE ────────────────────────────────────────────────────────
+// ─── 4. MASTER ENGINE ────────────────────────────────────────────────────────
+
 export default function MasterPortfolio({ 
   initialProjects = [], 
   initialSkills = [], 
@@ -278,44 +488,57 @@ export default function MasterPortfolio({
       {/* Persistent 3D Background */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <Canvas camera={{ position: [0, 0, 5] }}>
+          <Stardust />
           <Particles isHovered={isHovered} />
         </Canvas>
       </div>
 
       {/* Nav */}
-      <nav className="fixed top-0 w-full px-6 md:px-12 py-6 flex justify-between items-center z-50">
-        <button onClick={() => setView("home")} className="text-xl font-black tracking-tighter hover:text-white/60 transition-colors cursor-none">
+      <nav className="fixed top-0 w-full px-6 md:px-12 py-8 flex justify-between items-center z-50 mix-blend-difference">
+        <button onClick={() => setView("home")} className="text-2xl font-black tracking-tighter hover:text-white/60 transition-colors italic">
           SID.
         </button>
-        <div className="flex gap-4 md:gap-8 text-[10px] md:text-xs uppercase tracking-widest text-white/40 font-bold">
-          {(["home", "skills", "projects", "experience"] as View[]).map((v) => (
+        <div className="hidden md:flex gap-12 text-[10px] uppercase tracking-[0.4em] font-mono text-white/30">
+          {(["skills", "projects", "experience"] as View[]).map((v) => (
             <button
               key={v}
               onClick={() => setView(v)}
-              className={`hover:text-white transition-colors duration-300 cursor-none ${view === v ? "text-white" : ""}`}
+              className={`hover:text-white transition-colors duration-500 relative py-2 ${view === v ? "text-white" : ""}`}
             >
               {v}
+              {view === v && <motion.div layoutId="nav-line" className="absolute bottom-0 left-0 w-full h-[1px] bg-white" />}
             </button>
           ))}
         </div>
         <button
           onClick={() => setView("contact")}
-          className={`px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-colors duration-300 cursor-none ${view === "contact" ? "bg-white text-black underline underline-offset-4" : "border border-white/20 text-white/60 hover:border-white/60 hover:text-white"}`}
+          className={`px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${view === "contact" ? "bg-white text-black" : "border border-white/10 text-white/40 hover:border-white/30 hover:text-white"}`}
         >
-          Hire Me
+          Initiate Contact
         </button>
       </nav>
 
       {/* Animated Views */}
-      <main className="relative z-10 pt-20 w-full" onMouseEnter={view === "home" ? () => setIsHovered(true) : undefined} onMouseLeave={view === "home" ? () => setIsHovered(false) : undefined}>
+      <main className="relative z-10 pt-24 w-full">
         <AnimatePresence mode="wait">
-          {view === "home" && <HomeView key="home" onNavigate={setView} onHover={setIsHovered} />}
-          {view === "skills" && <SkillsView key="skills" skills={initialSkills} />}
-          {view === "projects" && <ProjectsView key="projects" projects={initialProjects} />}
-          {view === "experience" && <ExperienceView key="experience" experiences={initialExperiences} />}
-          {view === "contact" && <ContactView key="contact" />}
+          <motion.div
+            key={view}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {view === "home" && <HomeView onNavigate={setView} onHover={setIsHovered} />}
+            {view === "skills" && <SkillsView skills={initialSkills} />}
+            {view === "projects" && <ProjectsView projects={initialProjects} />}
+            {view === "experience" && <ExperienceView experiences={initialExperiences} />}
+            {view === "contact" && <ContactView />}
+          </motion.div>
         </AnimatePresence>
       </main>
+
+      {/* Subtle Noise */}
+      <div className="fixed inset-0 pointer-events-none z-[80] opacity-[0.03] bg-[url('/noise.png')] bg-repeat" />
     </div>
   );
 }

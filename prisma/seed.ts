@@ -25,8 +25,13 @@ async function main() {
     { name: 'Premiere Pro', category: SkillCategory.CREATIVE, level: 4, order: 3 },
     { name: 'DaVinci Resolve', category: SkillCategory.CREATIVE, level: 3, order: 4 },
     { name: 'After Effects', category: SkillCategory.CREATIVE, level: 3, order: 5 },
-    // AI
-    { name: 'AI Tools', category: SkillCategory.AI_TOOLS, level: 5, order: 1 },
+    // AI Tools
+    { name: 'ChatGPT', category: SkillCategory.AI_TOOLS, level: 5, order: 1 },
+    { name: 'Grok', category: SkillCategory.AI_TOOLS, level: 4, order: 2 },
+    { name: 'DeepSeek', category: SkillCategory.AI_TOOLS, level: 5, order: 3 },
+    { name: 'Claude', category: SkillCategory.AI_TOOLS, level: 5, order: 4 },
+    { name: 'Gemini', category: SkillCategory.AI_TOOLS, level: 4, order: 5 },
+    { name: 'Midjourney', category: SkillCategory.AI_TOOLS, level: 4, order: 6 },
   ]
 
   for (const skill of skills) {
@@ -40,22 +45,31 @@ async function main() {
   // 2. Seed Projects
   const projects = [
     {
-      title: 'Web & Mobile Development',
+      title: 'Intelligence Hub',
       slug: 'web-mobile-dev',
       description: '7+ completed professional projects across fintech and education, focusing on high-performance architectures.',
       category: ProjectCategory.WEB,
-      tags: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL'],
+      tags: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL', 'TailwindCSS'],
       featured: true,
       order: 1,
     },
     {
       title: 'Creative Design Portfolio',
       slug: 'creative-design',
-      description: 'Premium branding and high-conversion assets for global creators. Expert in Photoshop and After Effects.',
+      description: 'Premium branding and high-conversion assets for global creators. Expert in Photoshop, Blender, and After Effects.',
       category: ProjectCategory.DESIGN,
-      tags: ['Photoshop', 'Branding', 'Premiere Pro'],
+      tags: ['Photoshop', 'Illustrator', 'Blender', 'AutoCAD', 'Figma', 'Branding'],
       featured: true,
       order: 2,
+    },
+    {
+      title: 'Signal Engine v2',
+      slug: 'open-source-engine',
+      description: 'Core contribution to advanced particle systems and real-time visualization engines. Open-source optimization.',
+      category: ProjectCategory.CODE,
+      tags: ['Three.js', 'GLSL', 'C++', 'Rust'],
+      featured: true,
+      order: 3,
     },
     {
       title: 'UPSC Preparation System',
@@ -64,7 +78,7 @@ async function main() {
       category: ProjectCategory.APP,
       tags: ['React Native', 'Supabase', 'Mobile'],
       featured: true,
-      order: 3,
+      order: 4,
     },
   ]
 

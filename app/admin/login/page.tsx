@@ -1,96 +1,103 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { authenticate } from "@/lib/actions/admin";
-import { Lock, ArrowRight, ShieldCheck } from "lucide-react";
 
 export default function AdminLoginPage() {
-  const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [passphrase, setPassphrase] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  async function handleSubmit(formData: FormData) {
-    setIsPending(true);
-    setError(null);
-    const result = await authenticate(formData);
-    if (result?.error) {
-      setError(result.error);
-      setIsPending(false);
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ passphrase }),
+      });
+
+      if (res.ok) {
+        router.push("/admin/dashboard");
+      } else {
+        const data = await res.json();
+        setError(data.error || "Invalid passphrase");
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 font-sans">
-      {/* Background visual engine */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-20">
-        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-white/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-white/5 rounded-full blur-[120px]" />
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 selection:bg-white/20">
+      {/* Background Glow */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-blue-600/5 rounded-full blur-[100px]" />
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-md relative z-10"
+        className="relative z-10 w-full max-w-md"
       >
-        <div className="text-center mb-10">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center mx-auto mb-6"
-          >
-            <ShieldCheck className="text-white w-8 h-8" />
-          </motion.div>
-          <h1 className="text-3xl font-black tracking-tighter mb-2 italic">COMMAND CENTER</h1>
-          <p className="text-white/40 text-sm font-mono tracking-widest uppercase">System Authorization Required</p>
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-black tracking-tighter mb-2">MATRIX ACCESS</h1>
+          <p className="text-white/40 font-mono text-xs uppercase tracking-widest">Administrator Authentication Required</p>
         </div>
 
-        <form action={handleSubmit} className="space-y-4">
-          <div className="relative group">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-white transition-colors">
-              <Lock size={18} />
+        <div className="bg-white/[0.03] border border-white/10 backdrop-blur-xl p-8 rounded-3xl shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+          
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-2">
+              <label htmlFor="passphrase" className="block text-[10px] font-mono uppercase tracking-[0.2em] text-white/40 ml-1">
+                Security Passphrase
+              </label>
+              <input
+                type="password"
+                id="passphrase"
+                value={passphrase}
+                onChange={(e) => setPassphrase(e.target.value)}
+                autoFocus
+                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white placeholder:text-white/10 focus:outline-none focus:border-white/30 focus:bg-white/[0.07] transition-all duration-300 font-mono text-lg tracking-widest"
+                placeholder="••••••••••••"
+                required
+              />
             </div>
-            <input
-              type="password"
-              name="passphrase"
-              required
-              placeholder="ENTER SYSTEM PASSPHRASE"
-              className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-white/10 focus:outline-none focus:border-white/40 focus:bg-white/[0.08] transition-all font-mono text-sm tracking-widest"
-            />
-          </div>
 
-          {error && (
-            <motion.p
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="text-red-500 text-xs font-mono uppercase tracking-wider text-center"
-            >
-              {error}
-            </motion.p>
-          )}
-
-          <button
-            type="submit"
-            disabled={isPending}
-            className="w-full bg-white text-black font-black py-4 rounded-2xl hover:bg-white/90 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed group"
-          >
-            {isPending ? (
-              <span className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
-            ) : (
-              <>
-                AUTHORIZE LINK
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-              </>
+            {error && (
+              <motion.p
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="text-red-400 text-xs font-mono text-center"
+              >
+                ⚠ {error}
+              </motion.p>
             )}
-          </button>
-        </form>
 
-        <div className="mt-12 text-center">
-          <p className="text-[10px] text-white/20 font-mono uppercase tracking-[0.3em]">
-            &copy; 2026 Admin Infrastructure // Secured by AES-256
-          </p>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-white text-black font-black uppercase tracking-widest py-4 rounded-2xl hover:bg-white/90 active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden"
+            >
+              <span className="relative z-10">{isLoading ? "Verifying..." : "Enter Matrix →"}</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+            </button>
+          </form>
         </div>
+
+        <p className="text-center mt-12 text-white/20 text-[10px] font-mono uppercase tracking-[0.3em]">
+          Sid. Operations &copy; 2026
+        </p>
       </motion.div>
     </div>
   );
