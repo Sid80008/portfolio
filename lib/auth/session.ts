@@ -6,11 +6,16 @@ const secretKey = process.env.ADMIN_PASSPHRASE || "default-secret-do-not-use-in-
 const key = new TextEncoder().encode(secretKey);
 
 export async function encrypt(payload: any) {
-  return await new SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime("2h")
-    .sign(key);
+  try {
+    return await new SignJWT(payload)
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime("2h")
+      .sign(key);
+  } catch (err) {
+    console.error("[AUTH DEBUG] Encryption failed:", err);
+    throw err;
+  }
 }
 
 export async function decrypt(input: string): Promise<any> {
@@ -25,15 +30,25 @@ export async function decrypt(input: string): Promise<any> {
 }
 
 export async function login(passphrase: string) {
-  if (passphrase === process.env.ADMIN_PASSPHRASE) {
+  const envPass = process.env.ADMIN_PASSPHRASE;
+  
+  if (passphrase === envPass) {
+    console.log("[AUTH DEBUG] Passphrase match found. Creating session...");
     // Create the session
     const expires = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 hours
     const session = await encrypt({ role: "admin", expires });
 
     // Save the session in a cookie
-    cookies().set("session", session, { expires, httpOnly: true, secure: process.env.NODE_ENV === "production" });
-    return true;
+    try {
+      cookies().set("session", session, { expires, httpOnly: true, secure: process.env.NODE_ENV === "production" });
+      console.log("[AUTH DEBUG] Session cookie set successfully");
+      return true;
+    } catch (cookieErr) {
+      console.error("[AUTH DEBUG] Failed to set cookie via cookies().set():", cookieErr);
+      return false;
+    }
   }
+  console.log("[AUTH DEBUG] Passphrase mismatch");
   return false;
 }
 

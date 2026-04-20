@@ -22,7 +22,7 @@ const SECURITY_HEADERS: Record<string, string> = {
   "X-Frame-Options":           "DENY",
   "Referrer-Policy":           "strict-origin-when-cross-origin",
   "Permissions-Policy":        "camera=(), microphone=(), geolocation=()",
-  "Content-Security-Policy":   "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:;",
+  "Content-Security-Policy":   "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://vercel.live https://*.vercel.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https: https://vercel.live https://*.vercel.app;",
   "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
 };
 
@@ -78,14 +78,19 @@ export async function middleware(req: NextRequest) {
     response.headers.set(key, value);
   }
 
-  // CORS guard
+  // CORS guard - Allow if origin matches SITE_URL or current deployment host
   const origin = req.headers.get("origin");
+  const host = req.headers.get("host"); // Dynamic host (e.g. branch-name.vercel.app)
   const isDev  = process.env.NODE_ENV === "development";
 
-  if (origin && origin !== SITE_URL && !isDev) {
+  // Check if origin matches host
+  const isSameHost = origin && host && origin.includes(host);
+
+  if (origin && origin !== SITE_URL && !isSameHost && !isDev) {
     if (req.method !== "OPTIONS") {
+      logRequest(req, 403);
       return new NextResponse(
-        JSON.stringify({ success: false, error: "Forbidden" }),
+        JSON.stringify({ success: false, error: "Forbidden (CORS)" }),
         {
           status: 403,
           headers: {
