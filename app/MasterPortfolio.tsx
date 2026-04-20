@@ -450,8 +450,6 @@ export default function MasterPortfolio({
 
   return (
     <div className="relative w-full min-h-screen bg-black text-white overflow-x-hidden" style={{ fontFamily: "var(--font-space-grotesk, Inter, system-ui, sans-serif)" }}>
-      <SiteCursor />
-
       {/* Persistent 3D Background */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <Canvas camera={{ position: [0, 0, 5] }}>

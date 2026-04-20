@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "../styles/globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { Preloader } from "@/components/ui/Preloader";
+import { SiteCursor } from "@/components/ui/SiteCursor";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk", display: "swap" });
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
   },
 };
 
-import { SiteCursor } from "@/components/ui/SiteCursor";
+
 
 export default function RootLayout({
   children,
