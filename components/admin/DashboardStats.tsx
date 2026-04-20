@@ -4,7 +4,6 @@ import {
   Briefcase, 
   Cpu, 
   AlertCircle,
-  TrendingUp,
   Activity
 } from "lucide-react";
 

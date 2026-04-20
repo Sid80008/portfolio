@@ -1,6 +1,6 @@
 import React from "react";
 import { PrismaClient } from "@prisma/client";
-import { Mail, CheckCircle, Trash2, AlertTriangle, Eye } from "lucide-react";
+import { Mail, CheckCircle, Trash2, AlertTriangle } from "lucide-react";
 import { updateMessageStatus, deleteMessage } from "@/lib/actions/admin";
 
 const prisma = new PrismaClient();
@@ -53,7 +53,7 @@ export default async function AdminMessagesPage() {
                   <h5 className="text-sm font-bold text-white/80">{msg.subject}</h5>
                 </div>
                 <p className="text-sm text-white/60 leading-relaxed font-serif italic text-lg">
-                  "{msg.message}"
+                  &quot;{msg.message}&quot;
                 </p>
               </div>
 

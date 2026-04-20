@@ -1,7 +1,6 @@
 import React from "react";
 import { getDashboardStats } from "@/lib/actions/admin";
 import DashboardStats from "@/components/admin/DashboardStats";
-import { motion } from "framer-motion";
 import { Calendar, Mail, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 

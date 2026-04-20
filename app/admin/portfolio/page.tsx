@@ -5,19 +5,16 @@ import {
   Trash2, 
   RefreshCw, 
   Layers, 
-  Database,
-  ExternalLink,
-  Code
+  Database
 } from "lucide-react";
 import { syncFromStatic, deleteProject, deleteSkill } from "@/lib/actions/admin";
 
 const prisma = new PrismaClient();
 
 export default async function AdminPortfolioPage() {
-  const [projects, skills, experiences] = await Promise.all([
+  const [projects, skills] = await Promise.all([
     prisma.project.findMany({ orderBy: { order: "asc" } }),
     prisma.skill.findMany({ orderBy: { category: "asc" } }),
-    prisma.experience.findMany({ orderBy: { order: "asc" } }),
   ]);
 
   return (

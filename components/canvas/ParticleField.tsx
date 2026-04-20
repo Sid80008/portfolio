@@ -3,9 +3,9 @@ import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-function Particles() {
+export function Particles({ isHovered = false }: { isHovered?: boolean }) {
   const points = useRef<THREE.Points>(null!);
-  const count = 1000;
+  const count = 2000; // Increased density for premium feel
 
   const [positions, colors] = useMemo(() => {
     const pos = new Float32Array(count * 3);
@@ -23,8 +23,9 @@ function Particles() {
     
     points.current.rotation.y = time * 0.05;
     
-    points.current.position.x = THREE.MathUtils.lerp(points.current.position.x, mouse.x * 2, 0.05);
-    points.current.position.y = THREE.MathUtils.lerp(points.current.position.y, mouse.y * 2, 0.05);
+    // Smooth movement based on mouse
+    points.current.position.x = THREE.MathUtils.lerp(points.current.position.x, mouse.x * (isHovered ? 2 : 0.5), 0.05);
+    points.current.position.y = THREE.MathUtils.lerp(points.current.position.y, mouse.y * (isHovered ? 2 : 0.5), 0.05);
   });
 
   return (
@@ -37,8 +38,9 @@ function Particles() {
         size={0.03} 
         vertexColors 
         transparent 
-        opacity={0.6} 
+        opacity={0.4} 
         sizeAttenuation 
+        blending={THREE.AdditiveBlending}
       />
     </points>
   );
@@ -47,7 +49,9 @@ function Particles() {
 export default function ParticleField() {
   return (
     <div className="fixed inset-0 -z-10 bg-black pointer-events-none">
-      <Canvas camera={{ position: [0, 0, 5] }}><Particles /></Canvas>
+      <Canvas camera={{ position: [0, 0, 5] }}>
+        <Particles />
+      </Canvas>
     </div>
   );
 }
