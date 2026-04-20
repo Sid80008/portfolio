@@ -40,49 +40,31 @@ async function main() {
   // 2. Seed Projects
   const projects = [
     {
-      title: 'YouTube Thumbnails',
-      slug: 'youtube-thumbnails',
-      description: 'High-conversion thumbnails for educational and tech channels',
-      category: ProjectCategory.DESIGN,
-      tags: ['Photoshop', 'Branding'],
+      title: 'Web & Mobile Development',
+      slug: 'web-mobile-dev',
+      description: '7+ completed professional projects across fintech and education, focusing on high-performance architectures.',
+      category: ProjectCategory.WEB,
+      tags: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL'],
       featured: true,
       order: 1,
     },
     {
-      title: 'UPSC Dashboard App',
-      slug: 'upsc-dashboard',
-      description: 'Personalized preparation tracker app for UPSC aspirants',
-      category: ProjectCategory.APP,
-      tags: ['React Native', 'UI/UX'],
+      title: 'Creative Design Portfolio',
+      slug: 'creative-design',
+      description: 'Premium branding and high-conversion assets for global creators. Expert in Photoshop and After Effects.',
+      category: ProjectCategory.DESIGN,
+      tags: ['Photoshop', 'Branding', 'Premiere Pro'],
       featured: true,
       order: 2,
     },
     {
-      title: 'Brand Identity',
-      slug: 'brand-identity',
-      description: 'Logo and visual identity for modern startups',
-      category: ProjectCategory.DESIGN,
-      tags: ['Illustrator', 'Design'],
-      featured: false,
-      order: 3,
-    },
-    {
-      title: 'Posters & Campaign',
-      slug: 'posters-campaign',
-      description: 'Creative posters for college festivals and events',
-      category: ProjectCategory.DESIGN,
-      tags: ['Photoshop', 'Typography'],
-      featured: false,
-      order: 4,
-    },
-    {
-      title: 'Personal Web Project',
-      slug: 'personal-web',
-      description: 'Interactive creative portfolio using Next.js and Three.js',
-      category: ProjectCategory.WEB,
-      tags: ['React', 'Next.js', 'Tailwind'],
+      title: 'UPSC Preparation System',
+      slug: 'upsc-system',
+      description: 'A data-driven tracking and scheduling app for competitive examination aspirants.',
+      category: ProjectCategory.APP,
+      tags: ['React Native', 'Supabase', 'Mobile'],
       featured: true,
-      order: 5,
+      order: 3,
     },
   ]
 
@@ -95,37 +77,27 @@ async function main() {
   }
 
   // 3. Seed Experience
-  await prisma.experience.deleteMany({}) // Reset since there's no unique unique key to upsert neatly
+  await prisma.experience.deleteMany({}) 
   
   await prisma.experience.createMany({
     data: [
       {
-        title: 'Freelance Graphic Designer',
-        org: 'Self-Employed',
+        title: 'Internship & Personal Projects',
+        org: 'Full-Stack Engineering',
         type: 'freelance',
-        description: 'Creating thumbnails, branding, and digital assets. Proficient in Photoshop and Illustrator.',
-        startDate: new Date('2022-01-01'),
+        description: 'Gaining hands-on experience through internships and personal projects across full-stack engineering and design.',
+        startDate: new Date('2025-01-01'),
         current: true,
         order: 1,
       },
       {
-        title: 'B.Tech student',
-        org: 'NIT Hamirpur',
-        type: 'college',
-        description: 'Pursuing Bachelor of Technology with hands-on coding (C++, Python) and database management experience.',
-        startDate: new Date('2023-08-01'),
+        title: 'Creative Design & Branding',
+        org: 'Freelance',
+        type: 'freelance',
+        description: 'Proficient in Adobe Illustrator, Photoshop, Figma, Premiere Pro, and After Effects. Delivering brand identities and multimedia assets.',
+        startDate: new Date('2025-01-01'),
         current: true,
         order: 2,
-      },
-      {
-        title: 'High School (12th)',
-        org: 'JNV',
-        type: 'school',
-        description: 'Completed higher secondary education.',
-        startDate: new Date('2021-04-01'),
-        endDate: new Date('2023-03-31'),
-        current: false,
-        order: 3,
       },
     ]
   })
