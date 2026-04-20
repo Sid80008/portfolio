@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Project } from "@prisma/client";
-import { ExternalLink, Code2 } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 export default function ProjectCard({ project, index }: { project: Project, index: number }) {
   return (

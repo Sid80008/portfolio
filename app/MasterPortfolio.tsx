@@ -1,18 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useMemo, Suspense } from "react";
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   ArrowRight, 
-  GitHub, 
-  ExternalLink, 
-  Mail, 
   Send, 
-  User, 
-  MessageSquare, 
-  ChevronRight,
-  Code2,
-  Terminal,
   Cpu,
   Zap
 } from "lucide-react";
@@ -419,7 +411,7 @@ function ContactView() {
       {/* Upper Section: Text + Photo */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-16 mb-24">
         <div className="max-w-2xl">
-          <h2 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 italic">LET'S BUILD</h2>
+          <h2 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 italic">LET&apos;S BUILD</h2>
           <p className="text-white/50 text-xl leading-relaxed font-medium">
             Ready to initiate a new project or collaboration? My system is currently open for high-engagement opportunities.
           </p>
